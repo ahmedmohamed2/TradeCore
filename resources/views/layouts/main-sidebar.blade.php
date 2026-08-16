@@ -22,7 +22,8 @@
       <nav class="mt-2" aria-label="Main navigation">
         <!--begin::Sidebar Menu-->
         <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
-          <li class="nav-item menu-open">
+
+          {{-- <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
               <i class="nav-icon bi bi-speedometer"></i>
               <p>
@@ -50,7 +51,7 @@
                 </a>
               </li>
             </ul>
-          </li>
+          </li> --}}
 
 
 
