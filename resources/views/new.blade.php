@@ -11,7 +11,7 @@
 
 @section("title_page_2", "Main")
 
-@section("main_title", "Dashboardd")
+@section("main_title", "Dashboard")
 
 
 @section("content")
