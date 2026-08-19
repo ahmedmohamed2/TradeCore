@@ -3,10 +3,13 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
-    @include('layouts.head') 
-
+    @include('layouts.head')
+    @livewireStyles
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -66,6 +69,8 @@
 
     <!-- Start Scripts -->
     @include('layouts.footer-scripts')
+    @stack('modals')
+    @livewireScripts
     <!-- End Scripts -->
 
   </body>
