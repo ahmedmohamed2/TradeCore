@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        'company_photos' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/company_photos'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads/company_photos',
+            'visibility' => 'public',
+            'throw' => true,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -24,19 +24,20 @@
             </a>
           </li>
 
+
           <li class="nav-item">
-            <a href="{{ route('profile.show') }}" class="nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}">
-              <i class="nav-icon bi bi-person-circle"></i>
-              <p>Profile</p>
+            <a href="{{ route('system-settings.index') }}" class="nav-link {{ request()->routeIs('system-settings.*') ? 'active' : '' }}">
+              <i class="nav-icon bi bi-gear"></i>
+              <p>System Settings</p>
             </a>
           </li>
 
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon bi bi-people"></i>
               <p>Users</p>
             </a>
-          </li>
+          </li> --}}
         </ul>
         <!--end::Sidebar Menu-->
       </nav>
