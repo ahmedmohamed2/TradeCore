@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'save' => 'Save',
+    'save_changes' => 'Save Changes',
+    'cancel' => 'Cancel',
+    'edit' => 'Edit',
+    'create' => 'Create',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'light' => 'Light',
+    'dark' => 'Dark',
+    'auto' => 'Auto',
+    'close' => 'Close',
+    'more_info' => 'More info',
+    'member_since' => 'Member since',
+    'language' => 'Language',
+    'toggle_sidebar' => 'Toggle sidebar',
+    'toggle_fullscreen' => 'Toggle fullscreen',
+    'toggle_color_scheme' => 'Toggle color scheme',
+    'copyright' => 'Copyright',
+    'all_rights_reserved' => 'All rights reserved.',
+    'footer_tagline' => 'TradeCore ERP',
+    'main' => 'Main',
+];

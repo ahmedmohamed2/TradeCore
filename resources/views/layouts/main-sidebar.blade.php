@@ -12,15 +12,15 @@
     <!--end::Sidebar Brand-->
     <!--begin::Sidebar Wrapper-->
     <div class="sidebar-wrapper">
-      <nav class="mt-2" aria-label="Main navigation">
+      <nav class="mt-2" aria-label="{{ __('menu.pages') }}">
         <!--begin::Sidebar Menu-->
         <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
-          <li class="nav-header">PAGES</li>
+          <li class="nav-header">{{ __('menu.pages') }}</li>
 
           <li class="nav-item">
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
               <i class="nav-icon bi bi-speedometer2"></i>
-              <p>Dashboard</p>
+              <p>{{ __('menu.dashboard') }}</p>
             </a>
           </li>
 
@@ -28,7 +28,7 @@
           <li class="nav-item">
             <a href="{{ route('system-settings.index') }}" class="nav-link {{ request()->routeIs('system-settings.*') ? 'active' : '' }}">
               <i class="nav-icon bi bi-gear"></i>
-              <p>System Settings</p>
+              <p>{{ __('menu.system_settings') }}</p>
             </a>
           </li>
 

@@ -30,6 +30,21 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'locale' => $this->resolvedLocale(),
         ]);
+    }
+
+    private function resolvedLocale(): string
+    {
+        /** @var list<string> $available */
+        $available = config('locale.available');
+        $default = (string) config('locale.default');
+        $sessionLocale = session('locale');
+
+        if (is_string($sessionLocale) && in_array($sessionLocale, $available, true)) {
+            return $sessionLocale;
+        }
+
+        return $default;
     }
 }

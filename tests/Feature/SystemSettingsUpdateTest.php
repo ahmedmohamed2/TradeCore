@@ -33,7 +33,7 @@ test('authenticated users can view the edit form', function () {
         ->get(route('system-settings.edit', $setting))
         ->assertOk()
         ->assertSee('TradeCore')
-        ->assertSee('Save Changes');
+        ->assertSee(__('general.save_changes'));
 });
 
 test('authenticated users can update system settings', function () {

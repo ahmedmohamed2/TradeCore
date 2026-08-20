@@ -25,7 +25,7 @@ test('authenticated users can visit the dashboard', function () {
         ->get(route('dashboard'))
         ->assertOk()
         ->assertSeeText($user->name)
-        ->assertSeeText('Dashboard');
+        ->assertSeeText(__('menu.dashboard'));
 });
 
 test('authenticated users can log out', function () {

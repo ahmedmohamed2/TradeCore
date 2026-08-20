@@ -16,8 +16,8 @@ test('authenticated users can visit the profile page', function () {
         ->assertSee('app-wrapper', false)
         ->assertSee('card-title', false)
         ->assertSee('card-tools', false)
-        ->assertSeeText('Profile Information')
-        ->assertSeeText("Update your account's profile information and email address.")
-        ->assertSeeText('Update Password')
-        ->assertSeeText('Ensure your account is using a long, random password to stay secure.');
+        ->assertSeeText(__('Profile Information'))
+        ->assertSeeText(__("Update your account's profile information and email address."))
+        ->assertSeeText(__('Update Password'))
+        ->assertSeeText(__('Ensure your account is using a long, random password to stay secure.'));
 });

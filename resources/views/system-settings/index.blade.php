@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'System Settings')
+@section('title', __('system-settings.title'))
 
 @section("css")
 <style>
@@ -38,9 +38,9 @@
 </style>
 @endsection
 
-@section("title_page_1", "Dashboard")
-@section("title_page_2", "System Settings")
-@section("main_title", "System Settings")
+@section("title_page_1", __('menu.dashboard'))
+@section("title_page_2", __('system-settings.title'))
+@section("main_title", __('system-settings.title'))
 
 @section("content")
 
@@ -49,16 +49,16 @@
         @session('status')
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ $value }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('general.close') }}"></button>
             </div>
         @endsession
 
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">System Settings</h3>
+                <h3 class="card-title mb-0">{{ __('system-settings.title') }}</h3>
                 @if ($systemSettings)
                     <a href="{{ route('system-settings.edit', $systemSettings) }}" class="btn btn-primary btn-sm">
-                        <i class="bi bi-pencil-square"></i> Edit
+                        <i class="bi bi-pencil-square"></i> {{ __('general.edit') }}
                     </a>
                 @endif
             </div>
@@ -81,15 +81,15 @@
                             <div class="d-flex align-items-center gap-2">
                                 @if ($systemSettings->active)
                                     <span class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> Active
+                                        <i class="bi bi-check-circle"></i> {{ __('general.active') }}
                                     </span>
                                 @else
                                     <span class="badge bg-secondary">
-                                        <i class="bi bi-x-circle"></i> Inactive
+                                        <i class="bi bi-x-circle"></i> {{ __('general.inactive') }}
                                     </span>
                                 @endif
                                 @if ($systemSettings->company_code)
-                                    <span class="badge bg-light text-dark border">
+                                    <span class="badge bg-light text-dark border ltr-nums">
                                         {{ $systemSettings->company_code }}
                                     </span>
                                 @endif
@@ -102,7 +102,7 @@
                         <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
                             <i class="bi bi-exclamation-triangle-fill mt-1"></i>
                             <div>
-                                <strong>General Alert</strong>
+                                <strong>{{ __('system-settings.general_alert') }}</strong>
                                 <div>{{ $systemSettings->general_alert }}</div>
                             </div>
                         </div>
@@ -111,17 +111,17 @@
                     {{-- Details grid --}}
                     <div class="row g-4 mb-4">
                         <div class="col-md-6">
-                            <div class="settings-label">Address</div>
+                            <div class="settings-label">{{ __('system-settings.address') }}</div>
                             <div class="settings-value">
                                 <i class="bi bi-geo-alt text-muted"></i>
                                 {{ $systemSettings->address ?: '—' }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="settings-label">Phone</div>
+                            <div class="settings-label">{{ __('system-settings.phone') }}</div>
                             <div class="settings-value">
                                 <i class="bi bi-telephone text-muted"></i>
-                                {{ $systemSettings->phone ?: '—' }}
+                                <span class="ltr-nums">{{ $systemSettings->phone ?: '—' }}</span>
                             </div>
                         </div>
                     </div>
@@ -131,23 +131,23 @@
                     {{-- Audit info --}}
                     <div class="row g-4">
                         <div class="col-md-3 col-6">
-                            <div class="settings-label">Created By</div>
+                            <div class="settings-label">{{ __('system-settings.created_by') }}</div>
                             <div class="settings-value">{{ $systemSettings->createdBy?->name ?? '—' }}</div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="settings-label">Created At</div>
-                            <div class="settings-value" title="{{ $systemSettings->created_at }}">
-                                {{ $systemSettings->created_at?->format('d M Y, h:i A') ?? '—' }}
+                            <div class="settings-label">{{ __('system-settings.created_at') }}</div>
+                            <div class="settings-value ltr-nums" title="{{ $systemSettings->created_at }}">
+                                {{ $systemSettings->created_at?->translatedFormat('d M Y, h:i A') ?? '—' }}
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="settings-label">Updated By</div>
+                            <div class="settings-label">{{ __('system-settings.updated_by') }}</div>
                             <div class="settings-value">{{ $systemSettings->updatedBy?->name ?? '—' }}</div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="settings-label">Updated At</div>
-                            <div class="settings-value" title="{{ $systemSettings->updated_at }}">
-                                {{ $systemSettings->updated_at?->format('d M Y, h:i A') ?? '—' }}
+                            <div class="settings-label">{{ __('system-settings.updated_at') }}</div>
+                            <div class="settings-value ltr-nums" title="{{ $systemSettings->updated_at }}">
+                                {{ $systemSettings->updated_at?->translatedFormat('d M Y, h:i A') ?? '—' }}
                             </div>
                         </div>
                     </div>
@@ -155,10 +155,12 @@
                 @else
                     <div class="text-center py-5">
                         <i class="bi bi-gear display-4 text-muted"></i>
-                        <p class="mb-3 mt-3 text-muted">No active system settings found.</p>
-                        <a href="{{ route('system-settings.create') }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-plus-circle"></i> Create System Settings
-                        </a>
+                        <p class="mb-3 mt-3 text-muted">{{ __('system-settings.no_active') }}</p>
+                        @if (Route::has('system-settings.create'))
+                            <a href="{{ route('system-settings.create') }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle"></i> {{ __('system-settings.create') }}
+                            </a>
+                        @endif
                     </div>
                 @endif
             </div>

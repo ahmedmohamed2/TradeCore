@@ -66,6 +66,6 @@ class SystemSettingController extends Controller
         $systemSetting->update($attributes);
 
         return to_route('system-settings.index')
-            ->with('status', __('System settings updated successfully.'));
+            ->with('status', __('system-settings.updated'));
     }
 }

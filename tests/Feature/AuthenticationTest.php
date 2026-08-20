@@ -8,7 +8,7 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200)
         ->assertSee('login-page', false)
         ->assertSee('login-box', false)
-        ->assertSeeText('Sign in to start your session');
+        ->assertSeeText(__('Sign in to start your session'));
 });
 
 test('users can authenticate using the login screen', function () {

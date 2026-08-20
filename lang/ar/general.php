@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'save' => 'حفظ',
+    'save_changes' => 'حفظ التغييرات',
+    'cancel' => 'إلغاء',
+    'edit' => 'تعديل',
+    'create' => 'إنشاء',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'light' => 'فاتح',
+    'dark' => 'داكن',
+    'auto' => 'تلقائي',
+    'close' => 'إغلاق',
+    'more_info' => 'المزيد',
+    'member_since' => 'عضو منذ',
+    'language' => 'اللغة',
+    'toggle_sidebar' => 'تبديل القائمة الجانبية',
+    'toggle_fullscreen' => 'ملء الشاشة',
+    'toggle_color_scheme' => 'تبديل المظهر',
+    'copyright' => 'حقوق النشر',
+    'all_rights_reserved' => 'جميع الحقوق محفوظة.',
+    'footer_tagline' => 'TradeCore ERP',
+    'main' => 'الرئيسية',
+];

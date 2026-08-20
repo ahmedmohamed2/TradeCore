@@ -34,19 +34,6 @@ class UpdateSystemSettingRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
-    public function attributes(): array
-    {
-        return [
-            'system_name' => 'system name',
-            'system_photo' => 'system photo',
-            'general_alert' => 'general alert',
-            'company_code' => 'company code',
-        ];
-    }
-
     protected function prepareForValidation(): void
     {
         $this->merge([

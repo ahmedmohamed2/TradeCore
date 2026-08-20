@@ -9,7 +9,7 @@
             data-lte-toggle="sidebar"
             href="#"
             role="button"
-            aria-label="Toggle sidebar"
+            aria-label="{{ __('general.toggle_sidebar') }}"
           >
             <i class="bi bi-list"></i>
           </a>
@@ -19,13 +19,14 @@
 
       <!--begin::End Navbar Links-->
       <ul class="navbar-nav ms-auto">
+        @include('layouts.partials.locale-switcher')
         <!--begin::Fullscreen Toggle-->
         <li class="nav-item">
           <a
             class="nav-link"
             href="#"
             data-lte-toggle="fullscreen"
-            aria-label="Toggle fullscreen"
+            aria-label="{{ __('general.toggle_fullscreen') }}"
           >
             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
@@ -39,7 +40,7 @@
             class="nav-link"
             href="#"
             id="bd-theme"
-            aria-label="Toggle color scheme"
+            aria-label="{{ __('general.toggle_color_scheme') }}"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
@@ -60,7 +61,7 @@
                 aria-pressed="false"
               >
                 <i class="bi bi-sun-fill me-2"></i>
-                Light
+                {{ __('general.light') }}
                 <i class="bi bi-check-lg ms-auto d-none"></i>
               </button>
             </li>
@@ -72,7 +73,7 @@
                 aria-pressed="false"
               >
                 <i class="bi bi-moon-fill me-2"></i>
-                Dark
+                {{ __('general.dark') }}
                 <i class="bi bi-check-lg ms-auto d-none"></i>
               </button>
             </li>
@@ -84,7 +85,7 @@
                 aria-pressed="true"
               >
                 <i class="bi bi-circle-half me-2"></i>
-                Auto
+                {{ __('general.auto') }}
                 <i class="bi bi-check-lg ms-auto d-none"></i>
               </button>
             </li>
@@ -113,7 +114,7 @@
               />
               <p>
                 {{ auth()->user()->name }}
-                <small>Member since {{ auth()->user()->created_at->format('M. Y') }}</small>
+                <small>{{ __('general.member_since') }} {{ auth()->user()->created_at->translatedFormat('M Y') }}</small>
               </p>
             </li>
             <!--end::User Image-->

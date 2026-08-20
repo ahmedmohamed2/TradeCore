@@ -1,17 +1,17 @@
 @extends('layouts.master')
 
-@section('title', 'Main Dashboard')
+@section('title', __('dashboard.title'))
 
 @section("css")
 
 
 @endsection
 
-@section("title_page_1", "Dashboard")
+@section("title_page_1", __('menu.dashboard'))
 
-@section("title_page_2", "Main")
+@section("title_page_2", __('general.main'))
 
-@section("main_title", "Dashboard")
+@section("main_title", __('menu.dashboard'))
 
 
 
@@ -25,7 +25,7 @@
         <div class="inner">
           <h3>150</h3>
 
-          <p>New Orders</p>
+          <p>{{ __('dashboard.new_orders') }}</p>
         </div>
         <svg
           class="small-box-icon"
@@ -42,7 +42,7 @@
           href="#"
           class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
         >
-          More info <i class="bi bi-link-45deg"></i>
+          {{ __('general.more_info') }} <i class="bi bi-link-45deg"></i>
         </a>
       </div>
       <!--end::Small Box Widget 1-->
@@ -54,7 +54,7 @@
         <div class="inner">
           <h3>53<sup class="fs-5">%</sup></h3>
 
-          <p>Bounce Rate</p>
+          <p>{{ __('dashboard.bounce_rate') }}</p>
         </div>
         <svg
           class="small-box-icon"
@@ -71,7 +71,7 @@
           href="#"
           class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
         >
-          More info <i class="bi bi-link-45deg"></i>
+          {{ __('general.more_info') }} <i class="bi bi-link-45deg"></i>
         </a>
       </div>
       <!--end::Small Box Widget 2-->
@@ -83,7 +83,7 @@
         <div class="inner">
           <h3>44</h3>
 
-          <p>User Registrations</p>
+          <p>{{ __('dashboard.user_registrations') }}</p>
         </div>
         <svg
           class="small-box-icon"
@@ -100,7 +100,7 @@
           href="#"
           class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover"
         >
-          More info <i class="bi bi-link-45deg"></i>
+          {{ __('general.more_info') }} <i class="bi bi-link-45deg"></i>
         </a>
       </div>
       <!--end::Small Box Widget 3-->
@@ -112,7 +112,7 @@
         <div class="inner">
           <h3>65</h3>
 
-          <p>Unique Visitors</p>
+          <p>{{ __('dashboard.unique_visitors') }}</p>
         </div>
         <svg
           class="small-box-icon"
@@ -136,7 +136,7 @@
           href="#"
           class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
         >
-          More info <i class="bi bi-link-45deg"></i>
+          {{ __('general.more_info') }} <i class="bi bi-link-45deg"></i>
         </a>
       </div>
       <!--end::Small Box Widget 4-->
