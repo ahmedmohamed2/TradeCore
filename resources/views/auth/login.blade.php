@@ -25,32 +25,14 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-8">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember_me">
-                        <label class="form-check-label" for="remember_me">
-                            {{ __('Remember me') }}
-                        </label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">{{ __('Log in') }}</button>
-                    </div>
-                </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">{{ __('Log in') }}</button>
             </div>
         </form>
 
         @if (Route::has('password.request'))
-            <p class="mb-1 mt-3">
+            <p class="mb-0 mt-3">
                 <a href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
-            </p>
-        @endif
-
-        @if (Route::has('register'))
-            <p class="mb-0">
-                <a href="{{ route('register') }}">{{ __('Register a new membership') }}</a>
             </p>
         @endif
     </x-auth-card>
