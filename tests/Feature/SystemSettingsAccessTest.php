@@ -27,5 +27,7 @@ test('authenticated users can view the active system settings', function () {
         ->assertOk()
         ->assertSeeText('TradeCore')
         ->assertSeeText(__('general.edit'))
+        ->assertSeeText(__('system-settings.section_contact'))
+        ->assertSeeText(__('system-settings.section_notice'))
         ->assertSee(route('system-settings.edit', $setting), false);
 });
