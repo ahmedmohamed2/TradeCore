@@ -56,9 +56,11 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('system-settings.edit', $systemSettings) }}" class="btn btn-primary">
-                        <i class="bi bi-pencil-square"></i> {{ __('general.edit') }}
-                    </a>
+                    @can(\App\Enums\Permission::UpdateSystemSettings->value)
+                        <a href="{{ route('system-settings.edit', $systemSettings) }}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i> {{ __('general.edit') }}
+                        </a>
+                    @endcan
                 </div>
             </section>
 

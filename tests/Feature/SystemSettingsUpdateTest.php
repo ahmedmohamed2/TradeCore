@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Permission;
 use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -24,7 +25,7 @@ test('guests cannot update system settings', function () {
 });
 
 test('authenticated users can view the edit form', function () {
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $setting = SystemSetting::factory()->create([
         'system_name' => 'TradeCore',
     ]);
@@ -40,7 +41,7 @@ test('authenticated users can view the edit form', function () {
 });
 
 test('authenticated users can update system settings', function () {
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $setting = SystemSetting::factory()->create([
         'system_name' => 'Original Name',
         'company_code' => 'OLD001',
@@ -72,7 +73,7 @@ test('authenticated users can update system settings', function () {
 });
 
 test('system settings cannot be updated with invalid data', function () {
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $setting = SystemSetting::factory()->create([
         'system_name' => 'Original Name',
     ]);
@@ -92,7 +93,7 @@ test('system settings cannot be updated with invalid data', function () {
 test('updating system settings stores a photo in company photos uploads', function () {
     Storage::fake('company_photos');
 
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $setting = SystemSetting::factory()->create([
         'system_photo' => null,
     ]);
@@ -117,7 +118,7 @@ test('updating system settings stores a photo in company photos uploads', functi
 test('replacing a system photo deletes the previous file', function () {
     Storage::fake('company_photos');
 
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $oldPhoto = UploadedFile::fake()->image('old.png');
     $oldPath = $oldPhoto->store('', 'company_photos');
 
@@ -140,7 +141,7 @@ test('replacing a system photo deletes the previous file', function () {
 test('omitting a photo keeps the existing system photo', function () {
     Storage::fake('company_photos');
 
-    $user = User::factory()->create();
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $photo = UploadedFile::fake()->image('logo.png');
     $path = $photo->store('', 'company_photos');
 
@@ -157,8 +158,8 @@ test('omitting a photo keeps the existing system photo', function () {
 });
 
 test('created_by cannot be changed through the update form', function () {
-    $creator = User::factory()->create();
-    $user = User::factory()->create();
+    $creator = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
+    $user = userWithPermissions(Permission::ViewSystemSettings, Permission::UpdateSystemSettings);
     $setting = SystemSetting::factory()->create([
         'created_by' => $creator->id,
     ]);

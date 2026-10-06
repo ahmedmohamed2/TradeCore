@@ -25,19 +25,36 @@
           </li>
 
 
-          <li class="nav-item">
-            <a href="{{ route('system-settings.index') }}" class="nav-link {{ request()->routeIs('system-settings.*') ? 'active' : '' }}">
-              <i class="nav-icon bi bi-gear"></i>
-              <p>{{ __('menu.system_settings') }}</p>
-            </a>
-          </li>
+          @can(\App\Enums\Permission::ViewSystemSettings->value)
+            <li class="nav-item">
+              <a href="{{ route('system-settings.index') }}" class="nav-link {{ request()->routeIs('system-settings.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-gear"></i>
+                <p>{{ __('menu.system_settings') }}</p>
+              </a>
+            </li>
+          @endcan
 
-          {{-- <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon bi bi-people"></i>
-              <p>Users</p>
-            </a>
-          </li> --}}
+          @canany(array_merge(\App\Enums\Permission::userPermissions(), \App\Enums\Permission::rolePermissions()))
+            <li class="nav-header">{{ __('menu.access') }}</li>
+
+            @canany(\App\Enums\Permission::userPermissions())
+              <li class="nav-item">
+                <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-people"></i>
+                  <p>{{ __('menu.users') }}</p>
+                </a>
+              </li>
+            @endcanany
+
+            @canany(\App\Enums\Permission::rolePermissions())
+              <li class="nav-item">
+                <a href="{{ route('roles.index') }}" class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-shield-lock"></i>
+                  <p>{{ __('menu.roles') }}</p>
+                </a>
+              </li>
+            @endcanany
+          @endcanany
         </ul>
         <!--end::Sidebar Menu-->
       </nav>

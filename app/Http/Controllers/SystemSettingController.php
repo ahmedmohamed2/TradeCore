@@ -2,16 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Permission;
 use App\Http\Requests\UpdateSystemSettingRequest;
 use App\Models\SystemSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-class SystemSettingController extends Controller
+class SystemSettingController extends Controller implements HasMiddleware
 {
+    /**
+     * @return array<int, Middleware>
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:'.Permission::ViewSystemSettings->value, only: ['index']),
+            new Middleware('permission:'.Permission::UpdateSystemSettings->value, only: ['edit', 'update']),
+        ];
+    }
+
     /**
      * Display the active system settings.
      */

@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\Permission;
+use App\Models\User;
+use App\Support\PermissionCatalog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,6 +19,9 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
+    ->beforeEach(function () {
+        app(PermissionCatalog::class)->sync();
+    })
     ->in('Feature');
 
 /*
@@ -44,7 +50,16 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function userWithPermissions(Permission ...$permissions): User
 {
-    // ..
+    $user = User::factory()->create();
+
+    if ($permissions !== []) {
+        $user->givePermissionTo(array_map(
+            fn (Permission $permission): string => $permission->value,
+            $permissions,
+        ));
+    }
+
+    return $user;
 }
