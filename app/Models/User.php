@@ -31,6 +31,8 @@ class User extends Authenticatable
      */
     protected string $guard_name = 'web';
 
+    public const DefaultProfilePhoto = 'default.png';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,6 +43,7 @@ class User extends Authenticatable
         'email',
         'password',
         'locale',
+        'profile_photo_path',
     ];
 
     /**
@@ -75,6 +78,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function profileImageUrl(): string
+    {
+        $filename = filled($this->profile_photo_path)
+            ? $this->profile_photo_path
+            : self::DefaultProfilePhoto;
+
+        return asset('uploads/profile_images/'.$filename);
     }
 
     /**

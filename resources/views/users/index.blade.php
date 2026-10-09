@@ -60,7 +60,12 @@
                         <tbody>
                             @foreach ($users as $account)
                                 <tr>
-                                    <td>{{ $account->name }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="{{ $account->profileImageUrl() }}" alt="" class="profile-thumb">
+                                            <span>{{ $account->name }}</span>
+                                        </div>
+                                    </td>
                                     <td class="ltr-nums" dir="ltr">{{ $account->email }}</td>
                                     <td>
                                         @if ($account->roles->isEmpty())

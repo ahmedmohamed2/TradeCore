@@ -56,6 +56,15 @@ return [
             'report' => false,
         ],
 
+        'profile_images' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/profile_images'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads/profile_images',
+            'visibility' => 'public',
+            'throw' => true,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

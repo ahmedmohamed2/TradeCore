@@ -11,8 +11,11 @@ use App\Support\RoleName;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class UserController extends Controller implements HasMiddleware
@@ -71,6 +74,7 @@ class UserController extends Controller implements HasMiddleware
             'email' => $request->validated('email'),
             'password' => $request->validated('password'),
             'locale' => $request->validated('locale'),
+            'profile_photo_path' => $this->storeProfilePhoto($request) ?? User::DefaultProfilePhoto,
         ]);
 
         $user->syncRoles($request->validated('roles') ?? []);
@@ -102,6 +106,14 @@ class UserController extends Controller implements HasMiddleware
             $attributes['password'] = $request->validated('password');
         }
 
+        $photo = $this->storeProfilePhoto($request, $user->profile_photo_path);
+
+        if ($photo !== null) {
+            $attributes['profile_photo_path'] = $photo;
+        } elseif (blank($user->profile_photo_path)) {
+            $attributes['profile_photo_path'] = User::DefaultProfilePhoto;
+        }
+
         $user->update($attributes);
         $user->syncRoles($request->validated('roles') ?? []);
 
@@ -131,9 +143,37 @@ class UserController extends Controller implements HasMiddleware
             return back()->with('error', __('users.cannot_delete_self'));
         }
 
+        $this->deleteProfilePhoto($user->profile_photo_path);
+
         $user->delete();
 
         return to_route('users.index')->with('status', __('users.deleted'));
+    }
+
+    private function storeProfilePhoto(Request $request, ?string $current = null): ?string
+    {
+        $photo = $request->file('profile_photo');
+
+        if (! $photo instanceof UploadedFile) {
+            return null;
+        }
+
+        File::ensureDirectoryExists(public_path('uploads/profile_images'));
+
+        $filename = $photo->hashName();
+        Storage::disk('profile_images')->putFileAs('', $photo, $filename);
+        $this->deleteProfilePhoto($current);
+
+        return $filename;
+    }
+
+    private function deleteProfilePhoto(?string $filename): void
+    {
+        if (blank($filename) || $filename === User::DefaultProfilePhoto) {
+            return;
+        }
+
+        Storage::disk('profile_images')->delete($filename);
     }
 
     /**

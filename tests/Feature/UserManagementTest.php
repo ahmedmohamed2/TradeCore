@@ -5,7 +5,9 @@ use App\Models\Role;
 use App\Models\User;
 use App\Support\RoleName;
 use Database\Seeders\UserSeeder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 test('guests are redirected from user management', function (string $method, string $route) {
     $this->{$method}(route($route))->assertRedirect(route('login'));
@@ -251,6 +253,115 @@ test('the sidebar shows only the access links a user is allowed to open', functi
         ->assertSeeText(__('menu.users'))
         ->assertDontSeeText(__('menu.roles'))
         ->assertDontSeeText(__('menu.system_settings'));
+});
+
+test('a user without a photo keeps the default profile image', function () {
+    $actor = userWithPermissions(Permission::CreateUsers, Permission::ViewUsers);
+
+    $this->actingAs($actor)
+        ->post(route('users.store'), validUserPayload())
+        ->assertRedirect(route('users.index'));
+
+    $created = User::query()->where('email', 'mona@example.com')->first();
+
+    expect($created?->profile_photo_path)->toBe(User::DefaultProfilePhoto);
+
+    $this->actingAs($actor)
+        ->get(route('users.index'))
+        ->assertOk()
+        ->assertSee(asset('uploads/profile_images/'.User::DefaultProfilePhoto), false);
+});
+
+test('an uploaded profile photo is stored under profile images', function () {
+    Storage::fake('profile_images');
+
+    $actor = userWithPermissions(Permission::CreateUsers);
+    $photo = UploadedFile::fake()->image('avatar.png');
+
+    $this->actingAs($actor)
+        ->post(route('users.store'), validUserPayload([
+            'profile_photo' => $photo,
+        ]))
+        ->assertRedirect(route('users.index'));
+
+    $created = User::query()->where('email', 'mona@example.com')->first();
+
+    expect($created?->profile_photo_path)->not->toBe(User::DefaultProfilePhoto);
+    Storage::disk('profile_images')->assertExists($created->profile_photo_path);
+});
+
+test('replacing a profile photo keeps the default image', function () {
+    Storage::fake('profile_images');
+    Storage::disk('profile_images')->put(User::DefaultProfilePhoto, 'default');
+
+    $actor = userWithPermissions(Permission::UpdateUsers, Permission::ViewUsers);
+    $subject = User::factory()->create([
+        'profile_photo_path' => User::DefaultProfilePhoto,
+    ]);
+
+    $this->actingAs($actor)
+        ->put(route('users.update', $subject), validUserPayload([
+            'email' => $subject->email,
+            'password' => '',
+            'password_confirmation' => '',
+            'profile_photo' => UploadedFile::fake()->image('new.png'),
+        ]))
+        ->assertRedirect(route('users.index'));
+
+    $subject->refresh();
+
+    expect($subject->profile_photo_path)->not->toBe(User::DefaultProfilePhoto);
+    Storage::disk('profile_images')->assertExists(User::DefaultProfilePhoto);
+    Storage::disk('profile_images')->assertExists($subject->profile_photo_path);
+});
+
+test('updating a user without a new photo keeps the current one', function () {
+    $actor = userWithPermissions(Permission::UpdateUsers, Permission::ViewUsers);
+    $subject = User::factory()->create([
+        'profile_photo_path' => 'kept.png',
+    ]);
+
+    $this->actingAs($actor)
+        ->put(route('users.update', $subject), validUserPayload([
+            'email' => $subject->email,
+            'password' => '',
+            'password_confirmation' => '',
+        ]))
+        ->assertRedirect(route('users.index'));
+
+    expect($subject->fresh()->profile_photo_path)->toBe('kept.png');
+});
+
+test('a profile photo must be an image', function () {
+    $actor = userWithPermissions(Permission::CreateUsers);
+
+    $this->actingAs($actor)
+        ->from(route('users.create'))
+        ->post(route('users.store'), validUserPayload([
+            'profile_photo' => UploadedFile::fake()->create('notes.pdf', 100, 'application/pdf'),
+        ]))
+        ->assertRedirect(route('users.create'))
+        ->assertSessionHasErrors('profile_photo');
+
+    expect(User::query()->where('email', 'mona@example.com')->exists())->toBeFalse();
+});
+
+test('deleting a user removes the uploaded photo and leaves the default image', function () {
+    Storage::fake('profile_images');
+    Storage::disk('profile_images')->put(User::DefaultProfilePhoto, 'default');
+    Storage::disk('profile_images')->put('custom.png', 'photo');
+
+    $actor = userWithPermissions(Permission::DeleteUsers, Permission::ViewUsers);
+    $subject = User::factory()->create([
+        'profile_photo_path' => 'custom.png',
+    ]);
+
+    $this->actingAs($actor)
+        ->delete(route('users.destroy', $subject))
+        ->assertRedirect(route('users.index'));
+
+    Storage::disk('profile_images')->assertMissing('custom.png');
+    Storage::disk('profile_images')->assertExists(User::DefaultProfilePhoto);
 });
 
 test('the user seeder creates a super admin', function () {

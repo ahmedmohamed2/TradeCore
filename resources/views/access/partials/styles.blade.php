@@ -87,4 +87,16 @@
         float: none;
         margin: 0;
     }
+
+    .profile-photo,
+    .profile-thumb {
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .profile-thumb {
+        width: 2.25rem;
+        height: 2.25rem;
+        flex: 0 0 auto;
+    }
 </style>

@@ -98,7 +98,7 @@
         <li class="nav-item dropdown user-menu">
           <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
             <img
-              src="{{ asset('uploads/profile_images/' . auth()->user()->profile_photo_path) }}"
+              src="{{ auth()->user()->profileImageUrl() }}"
               class="user-image rounded-circle shadow"
               alt="{{ auth()->user()->name }}"
             />
@@ -108,7 +108,7 @@
             <!--begin::User Image-->
             <li class="user-header text-bg-primary">
               <img
-                src="{{ asset('uploads/profile_images/' . auth()->user()->profile_photo_path) }}"
+                src="{{ auth()->user()->profileImageUrl() }}"
                 class="rounded-circle shadow"
                 alt="{{ auth()->user()->name }}"
               />

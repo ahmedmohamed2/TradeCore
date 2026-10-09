@@ -5,7 +5,7 @@
     $selectedLocale = old('locale', $editing ? $user->locale : config('locale.default'));
 @endphp
 
-<form method="POST" action="{{ $editing ? route('users.update', $user) : route('users.store') }}">
+<form method="POST" action="{{ $editing ? route('users.update', $user) : route('users.store') }}" enctype="multipart/form-data">
     @csrf
     @if ($editing)
         @method('PUT')
@@ -17,6 +17,30 @@
             <div>
                 <h2 id="user-account" class="settings-card-title">{{ __('users.section_account') }}</h2>
                 <p class="settings-card-hint">{{ __('users.section_account_hint') }}</p>
+            </div>
+        </div>
+
+        <div class="settings-photo-row mb-3">
+            <img
+                id="profile-photo-preview"
+                src="{{ $editing ? $user->profileImageUrl() : asset('uploads/profile_images/'.\App\Models\User::DefaultProfilePhoto) }}"
+                alt="{{ $editing ? $user->name : __('users.photo') }}"
+                class="settings-photo profile-photo"
+            >
+            <div>
+                <label for="profile_photo" class="btn btn-outline-secondary mb-2">
+                    {{ __('users.change_photo') }}
+                </label>
+                <input
+                    id="profile_photo"
+                    type="file"
+                    name="profile_photo"
+                    class="settings-file @error('profile_photo') is-invalid @enderror"
+                    accept="image/jpeg,image/png,image/webp"
+                    aria-describedby="profile_photo_hint"
+                >
+                <p id="profile_photo_hint" class="settings-hint">{{ __('users.photo_hint') }}</p>
+                <x-input-error for="profile_photo" class="mt-1" />
             </div>
         </div>
 
@@ -153,3 +177,20 @@
         <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">{{ __('general.cancel') }}</a>
     </div>
 </form>
+
+<script>
+    (() => {
+        const input = document.getElementById('profile_photo');
+        const preview = document.getElementById('profile-photo-preview');
+
+        input?.addEventListener('change', () => {
+            const file = input.files?.[0];
+
+            if (! file || ! preview) {
+                return;
+            }
+
+            preview.src = URL.createObjectURL(file);
+        });
+    })();
+</script>
