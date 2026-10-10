@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\Permission;
 use App\Http\Requests\Concerns\ValidatesSingleMasterTreasury;
+use App\Http\Requests\Concerns\ValidatesTreasuryParent;
 use App\Models\Treasury;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,6 +15,7 @@ use Illuminate\Validation\Validator;
 class UpdateTreasuryRequest extends FormRequest
 {
     use ValidatesSingleMasterTreasury;
+    use ValidatesTreasuryParent;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -35,6 +37,7 @@ class UpdateTreasuryRequest extends FormRequest
         return [
             'code' => ['required', 'string', 'max:32', 'regex:/^[A-Z0-9_-]+$/', Rule::unique('treasuries', 'code')->ignore($treasuryId)],
             'name' => ['required', 'string', 'max:255', Rule::unique('treasuries', 'name')->ignore($treasuryId)],
+            ...$this->parentRules(),
             'is_master' => ['required', 'boolean'],
             'opening_balance' => ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:9999999999999.99'],
             'notes' => ['nullable', 'string', 'max:2000'],
@@ -47,6 +50,7 @@ class UpdateTreasuryRequest extends FormRequest
         $this->merge([
             'code' => Str::upper(trim((string) $this->input('code'))),
             'name' => trim((string) $this->input('name')),
+            'parent_id' => $this->filled('parent_id') ? $this->input('parent_id') : null,
             'is_master' => $this->boolean('is_master'),
             'active' => $this->boolean('active'),
         ]);
@@ -60,6 +64,7 @@ class UpdateTreasuryRequest extends FormRequest
         return [
             function (Validator $validator): void {
                 $this->rejectDuplicateMaster($validator);
+                $this->rejectInvalidParent($validator);
             },
         ];
     }

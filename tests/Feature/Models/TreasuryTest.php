@@ -35,6 +35,18 @@ test('a user has the treasuries they created and updated', function () {
         ->and($user->updatedTreasuries->first()->is($updatedTreasury))->toBeTrue();
 });
 
+test('a main treasury has its sub-treasuries', function () {
+    $main = Treasury::factory()->create(['name' => 'Main cash']);
+    $subTreasury = Treasury::factory()->forParent($main)->create(['name' => 'Drawer']);
+    Treasury::factory()->create(['name' => 'Other cash']);
+
+    expect($subTreasury->parent)->toBeInstanceOf(Treasury::class)
+        ->and($subTreasury->parent->is($main))->toBeTrue()
+        ->and($main->children)->toHaveCount(1)
+        ->and($main->children->first()->is($subTreasury))->toBeTrue()
+        ->and(Treasury::query()->main()->pluck('id')->all())->not->toContain($subTreasury->id);
+});
+
 test('a master treasury stores the single master marker', function () {
     $treasury = Treasury::factory()->master()->create();
 

@@ -1,5 +1,8 @@
 @php
     $editing = $treasury !== null;
+    $selectedParent = old('parent_id', $editing ? $treasury->parent_id : $selectedParentId);
+    $hasParent = filled($selectedParent);
+    $keepsMainPlace = $editing && (int) $treasury->children_count > 0;
 @endphp
 
 <form method="POST" action="{{ $editing ? route('treasuries.update', $treasury) : route('treasuries.store') }}">
@@ -53,6 +56,30 @@
                 maxlength="255"
             >
             <x-input-error for="name" class="mt-1" />
+        </div>
+
+        <div class="settings-field">
+            @if ($keepsMainPlace)
+                <span class="settings-label">{{ __('treasuries.parent') }}</span>
+                <p class="settings-hint mb-0">{{ __('treasuries.has_subs_hint') }}</p>
+            @else
+                <label for="parent_id" class="settings-label">{{ __('treasuries.parent') }}</label>
+                <select
+                    id="parent_id"
+                    name="parent_id"
+                    class="form-select @error('parent_id') is-invalid @enderror"
+                    aria-describedby="parent_id_hint"
+                >
+                    <option value="" @selected(! $hasParent)>{{ __('treasuries.parent_none') }}</option>
+                    @foreach ($mainTreasuries as $mainTreasury)
+                        <option value="{{ $mainTreasury->id }}" @selected((string) $selectedParent === (string) $mainTreasury->id)>
+                            {{ $mainTreasury->code }} - {{ $mainTreasury->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <p id="parent_id_hint" class="settings-hint">{{ __('treasuries.parent_hint') }}</p>
+                <x-input-error for="parent_id" class="mt-1" />
+            @endif
         </div>
 
         <div class="settings-field">
@@ -112,7 +139,8 @@
                 role="switch"
                 class="form-check-input @error('is_master') is-invalid @enderror"
                 aria-describedby="is_master_hint"
-                @checked(old('is_master', $editing ? $treasury->is_master : false))
+                @checked(! $hasParent && old('is_master', $editing ? $treasury->is_master : false))
+                @disabled($hasParent)
             >
         </div>
         <x-input-error for="is_master" class="mt-1" />
@@ -191,3 +219,29 @@
         <a href="{{ route('treasuries.index') }}" class="btn btn-outline-secondary">{{ __('general.cancel') }}</a>
     </div>
 </form>
+
+@push('scripts')
+    <script>
+        (() => {
+            const parent = document.getElementById('parent_id');
+            const master = document.getElementById('is_master');
+
+            if (! parent || ! master) {
+                return;
+            }
+
+            const syncMaster = () => {
+                const hasParent = parent.value !== '';
+
+                master.disabled = hasParent;
+
+                if (hasParent) {
+                    master.checked = false;
+                }
+            };
+
+            parent.addEventListener('change', syncMaster);
+            syncMaster();
+        })();
+    </script>
+@endpush

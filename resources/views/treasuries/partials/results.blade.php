@@ -31,11 +31,15 @@
                         @endcan
 
                         @can(\App\Enums\Permission::DeleteTreasuries->value)
-                            <form method="POST" action="{{ route('treasuries.destroy', $treasury) }}" onsubmit="return confirm(@js(__('treasuries.confirm_delete')))">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>
-                            </form>
+                            @if ($treasury->children->isNotEmpty())
+                                <span class="treasury-delete-note">{{ __('treasuries.delete_blocked') }}</span>
+                            @else
+                                <form method="POST" action="{{ route('treasuries.destroy', $treasury) }}" onsubmit="return confirm(@js(__('treasuries.confirm_delete')))">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>
+                                </form>
+                            @endif
                         @endcan
                     </div>
                 </header>
@@ -73,6 +77,65 @@
                         <p class="settings-empty-note">—</p>
                     @endif
                 </div>
+
+                <section class="treasury-subs" aria-labelledby="treasury-subs-{{ $treasury->id }}">
+                    <div class="treasury-subs-head">
+                        <h4 id="treasury-subs-{{ $treasury->id }}" class="treasury-subs-title">{{ __('treasuries.sub_treasuries') }}</h4>
+                        @can(\App\Enums\Permission::CreateTreasuries->value)
+                            <a href="{{ route('treasuries.create', ['parent' => $treasury->id]) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                                {{ __('treasuries.add_sub') }}
+                            </a>
+                        @endcan
+                    </div>
+
+                    @if ($treasury->children->isEmpty())
+                        <p class="settings-empty-note">{{ __('treasuries.no_subs') }}</p>
+                    @else
+                        <ul class="treasury-sub-list">
+                            @foreach ($treasury->children as $subTreasury)
+                                <li class="treasury-sub">
+                                    <div class="treasury-sub-identity">
+                                        <p class="treasury-code ltr-nums" dir="ltr">{{ $subTreasury->code }}</p>
+                                        <p class="treasury-sub-name">{{ $subTreasury->name }}</p>
+                                        <p class="treasury-sub-meta">
+                                            <span class="ltr-nums" dir="ltr">{{ number_format((float) $subTreasury->opening_balance, 2) }}</span>
+                                            <span>{{ __('treasuries.last_collection_number') }} <span class="ltr-nums" dir="ltr">{{ $subTreasury->last_collection_number }}</span></span>
+                                            <span>{{ __('treasuries.last_payment_number') }} <span class="ltr-nums" dir="ltr">{{ $subTreasury->last_payment_number }}</span></span>
+                                        </p>
+                                        @if (filled($subTreasury->notes))
+                                            <p class="treasury-sub-notes">{{ $subTreasury->notes }}</p>
+                                        @endif
+                                    </div>
+
+                                    <div class="treasury-badges">
+                                        @if ($subTreasury->active)
+                                            <span class="badge text-bg-success">{{ __('general.active') }}</span>
+                                        @else
+                                            <span class="badge text-bg-secondary">{{ __('general.inactive') }}</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="access-actions">
+                                        @can(\App\Enums\Permission::UpdateTreasuries->value)
+                                            <a href="{{ route('treasuries.edit', $subTreasury) }}" class="btn btn-sm btn-outline-primary">
+                                                {{ __('general.edit') }}
+                                            </a>
+                                        @endcan
+
+                                        @can(\App\Enums\Permission::DeleteTreasuries->value)
+                                            <form method="POST" action="{{ route('treasuries.destroy', $subTreasury) }}" onsubmit="return confirm(@js(__('treasuries.confirm_delete')))">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </section>
 
                 <p class="treasury-record">
                     <span>

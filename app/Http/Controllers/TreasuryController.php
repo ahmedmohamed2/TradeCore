@@ -7,6 +7,8 @@ use App\Http\Requests\StoreTreasuryRequest;
 use App\Http\Requests\UpdateTreasuryRequest;
 use App\Models\Treasury;
 use App\Support\RealtimeSearch;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,11 +40,20 @@ class TreasuryController extends Controller implements HasMiddleware
 
         return RealtimeSearch::view($request, 'treasuries.index', [
             'treasuries' => Treasury::query()
+                ->main()
                 ->with([
                     'createdBy:id,name',
                     'updatedBy:id,name',
+                    'children',
                 ])
-                ->search($search)
+                ->when($search !== '', function (Builder $query) use ($search): void {
+                    $query->where(function (Builder $query) use ($search): void {
+                        $query->search($search)
+                            ->orWhereHas('children', function (Builder $children) use ($search): void {
+                                $children->search($search);
+                            });
+                    });
+                })
                 ->latest()
                 ->paginate(15)
                 ->withQueryString(),
@@ -53,9 +64,18 @@ class TreasuryController extends Controller implements HasMiddleware
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('treasuries.create');
+        $mainTreasuries = $this->mainTreasuries();
+        $requestedParent = $request->string('parent')->trim()->toString();
+        $selectedParent = ctype_digit($requestedParent)
+            ? $mainTreasuries->firstWhere('id', (int) $requestedParent)
+            : null;
+
+        return view('treasuries.create', [
+            'mainTreasuries' => $mainTreasuries,
+            'selectedParentId' => $selectedParent?->id,
+        ]);
     }
 
     /**
@@ -77,8 +97,12 @@ class TreasuryController extends Controller implements HasMiddleware
      */
     public function edit(Treasury $treasury): View
     {
+        $treasury->load(['createdBy', 'updatedBy'])->loadCount('children');
+
         return view('treasuries.edit', [
-            'treasury' => $treasury->load(['createdBy', 'updatedBy']),
+            'treasury' => $treasury,
+            'mainTreasuries' => $treasury->children_count > 0 ? new Collection : $this->mainTreasuries($treasury),
+            'selectedParentId' => $treasury->parent_id,
         ]);
     }
 
@@ -100,8 +124,27 @@ class TreasuryController extends Controller implements HasMiddleware
      */
     public function destroy(Treasury $treasury): RedirectResponse
     {
+        if ($treasury->children()->exists()) {
+            return to_route('treasuries.index')->with('error', __('treasuries.delete_blocked'));
+        }
+
         $treasury->delete();
 
         return to_route('treasuries.index')->with('status', __('treasuries.deleted'));
+    }
+
+    /**
+     * @return Collection<int, Treasury>
+     */
+    private function mainTreasuries(?Treasury $except = null): Collection
+    {
+        return Treasury::query()
+            ->main()
+            ->when(
+                $except instanceof Treasury,
+                fn (Builder $query): Builder => $query->whereKeyNot($except->getKey()),
+            )
+            ->orderBy('name')
+            ->get(['id', 'code', 'name']);
     }
 }

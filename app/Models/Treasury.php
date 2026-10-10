@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Treasury extends Model
 {
@@ -19,6 +20,7 @@ class Treasury extends Model
     protected $fillable = [
         'code',
         'name',
+        'parent_id',
         'is_master',
         'opening_balance',
         'last_payment_number',
@@ -60,6 +62,7 @@ class Treasury extends Model
     protected function casts(): array
     {
         return [
+            'parent_id' => 'integer',
             'is_master' => 'boolean',
             'opening_balance' => 'decimal:2',
             'last_payment_number' => 'integer',
@@ -86,6 +89,33 @@ class Treasury extends Model
                 ->orWhereRaw('name like ? escape ?', [$like, '\\'])
                 ->orWhereRaw('notes like ? escape ?', [$like, '\\']);
         });
+    }
+
+    /**
+     * Limit the query to treasuries that are not sub-treasuries.
+     *
+     * @param  Builder<Treasury>  $query
+     * @return Builder<Treasury>
+     */
+    public function scopeMain(Builder $query): Builder
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    /**
+     * @return BelongsTo<Treasury, $this>
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * @return HasMany<Treasury, $this>
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id')->orderBy('name');
     }
 
     /**

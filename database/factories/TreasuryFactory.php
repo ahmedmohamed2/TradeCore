@@ -33,6 +33,17 @@ class TreasuryFactory extends Factory
     }
 
     /**
+     * Place the treasury under a main treasury.
+     */
+    public function forParent(Treasury $parent): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'parent_id' => $parent->id,
+            'is_master' => false,
+        ]);
+    }
+
+    /**
      * Indicate that the treasury is the single master treasury.
      */
     public function master(): static
