@@ -40,10 +40,77 @@ test('users with permission can view and search treasuries', function () {
         ->assertDontSeeText('Shop cash');
 });
 
+test('the treasury list shows notes, counters, and who changed the record', function () {
+    $actor = userWithPermissions(Permission::ViewTreasuries);
+    $creator = User::factory()->create(['name' => 'Lina Cashier']);
+    $updater = User::factory()->create(['name' => 'Omar Auditor']);
+    $treasury = Treasury::factory()->create([
+        'code' => 'FRONT',
+        'name' => 'Front desk',
+        'opening_balance' => '1500.50',
+        'last_collection_number' => 8142,
+        'last_payment_number' => 9031,
+        'notes' => "Front desk cash\nSecond line",
+        'is_master' => false,
+        'active' => true,
+        'created_by' => $creator->id,
+        'updated_by' => $updater->id,
+    ]);
+
+    $this->actingAs($actor)
+        ->get(route('treasuries.index'))
+        ->assertOk()
+        ->assertSeeText('FRONT')
+        ->assertSeeText('Front desk')
+        ->assertSeeText('1,500.50')
+        ->assertSeeText(__('treasuries.master'))
+        ->assertSeeText('8142')
+        ->assertSeeText('9031')
+        ->assertSeeText("Front desk cash\nSecond line")
+        ->assertSeeText('Lina Cashier')
+        ->assertSeeText('Omar Auditor')
+        ->assertSeeText($treasury->created_at->translatedFormat('d M Y, h:i A'))
+        ->assertSeeText($treasury->updated_at->translatedFormat('d M Y, h:i A'))
+        ->assertDontSeeText('master_marker');
+});
+
+test('users can find a treasury by its notes', function () {
+    $actor = userWithPermissions(Permission::ViewTreasuries);
+    Treasury::factory()->create(['name' => 'Front desk', 'notes' => 'Petty cash drawer']);
+    Treasury::factory()->create(['name' => 'Shop cash', 'notes' => 'Retail float']);
+
+    $this->actingAs($actor)
+        ->get(route('treasuries.index', ['search' => 'Petty cash']))
+        ->assertOk()
+        ->assertSeeText('Front desk')
+        ->assertSeeText('Petty cash drawer')
+        ->assertDontSeeText('Shop cash');
+});
+
+test('the edit form shows who created and updated the treasury', function () {
+    $actor = userWithPermissions(Permission::UpdateTreasuries);
+    $creator = User::factory()->create(['name' => 'Lina Cashier']);
+    $updater = User::factory()->create(['name' => 'Omar Auditor']);
+    $treasury = Treasury::factory()->create([
+        'notes' => 'Front desk cash',
+        'created_by' => $creator->id,
+        'updated_by' => $updater->id,
+    ]);
+
+    $this->actingAs($actor)
+        ->get(route('treasuries.edit', $treasury))
+        ->assertOk()
+        ->assertSeeText('Front desk cash')
+        ->assertSeeText('Lina Cashier')
+        ->assertSeeText('Omar Auditor')
+        ->assertSeeText($treasury->created_at->translatedFormat('d M Y, h:i A'))
+        ->assertSeeText($treasury->updated_at->translatedFormat('d M Y, h:i A'));
+});
+
 test('a percent sign in search does not match every treasury', function () {
     $actor = userWithPermissions(Permission::ViewTreasuries);
-    Treasury::factory()->create(['name' => '100% Ready']);
-    Treasury::factory()->create(['name' => 'Plain Cash']);
+    Treasury::factory()->create(['name' => '100% Ready', 'notes' => null]);
+    Treasury::factory()->create(['name' => 'Plain Cash', 'notes' => null]);
 
     $this->actingAs($actor)
         ->get(route('treasuries.index', ['search' => '%']))

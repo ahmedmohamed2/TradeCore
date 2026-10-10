@@ -38,6 +38,10 @@ class TreasuryController extends Controller implements HasMiddleware
 
         return RealtimeSearch::view($request, 'treasuries.index', [
             'treasuries' => Treasury::query()
+                ->with([
+                    'createdBy:id,name',
+                    'updatedBy:id,name',
+                ])
                 ->search($search)
                 ->latest()
                 ->paginate(15)

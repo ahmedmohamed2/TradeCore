@@ -4,6 +4,7 @@
 
 @section('css')
     @include('access.partials.styles')
+    @include('treasuries.partials.styles')
 @endsection
 
 @section('title_page_1', __('menu.accounting'))

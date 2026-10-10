@@ -137,6 +137,35 @@
     </section>
 
     @if ($editing)
+        <section class="settings-card" aria-labelledby="treasury-record">
+            <div class="settings-card-head mb-2">
+                <span class="settings-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></span>
+                <div>
+                    <h2 id="treasury-record" class="settings-card-title">{{ __('treasuries.section_record') }}</h2>
+                    <p class="settings-card-hint">{{ __('treasuries.section_record_hint') }}</p>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <span class="settings-kicker">{{ __('treasuries.created_by') }}</span>
+                    <p class="settings-value">{{ $treasury->createdBy?->name ?? '—' }}</p>
+                </div>
+                <div class="col-sm-6">
+                    <span class="settings-kicker">{{ __('treasuries.created_at') }}</span>
+                    <p class="settings-value ltr-nums" dir="ltr">{{ $treasury->created_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</p>
+                </div>
+                <div class="col-sm-6">
+                    <span class="settings-kicker">{{ __('treasuries.updated_by') }}</span>
+                    <p class="settings-value">{{ $treasury->updatedBy?->name ?? '—' }}</p>
+                </div>
+                <div class="col-sm-6">
+                    <span class="settings-kicker">{{ __('treasuries.updated_at') }}</span>
+                    <p class="settings-value ltr-nums mb-0" dir="ltr">{{ $treasury->updated_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</p>
+                </div>
+            </div>
+        </section>
+
         <section class="settings-card" aria-labelledby="treasury-counters">
             <div class="settings-card-head mb-2">
                 <span class="settings-icon" aria-hidden="true"><i class="bi bi-receipt"></i></span>

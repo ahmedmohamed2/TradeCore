@@ -83,7 +83,8 @@ class Treasury extends Model
 
         return $query->where(function (Builder $query) use ($like): void {
             $query->whereRaw('code like ? escape ?', [$like, '\\'])
-                ->orWhereRaw('name like ? escape ?', [$like, '\\']);
+                ->orWhereRaw('name like ? escape ?', [$like, '\\'])
+                ->orWhereRaw('notes like ? escape ?', [$like, '\\']);
         });
     }
 
