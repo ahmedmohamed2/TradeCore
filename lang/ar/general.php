@@ -7,6 +7,7 @@ return [
     'edit' => 'تعديل',
     'create' => 'إنشاء',
     'delete' => 'حذف',
+    'confirm_irreversible' => 'لا يمكن التراجع عن هذا الإجراء.',
     'search' => 'بحث',
     'searching' => 'جارٍ البحث…',
     'actions' => 'إجراءات',

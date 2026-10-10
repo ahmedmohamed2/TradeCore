@@ -62,7 +62,7 @@
 
                                                 @can(\App\Enums\Permission::DeleteRoles->value)
                                                     @if ($role->users_count === 0)
-                                                        <form method="POST" action="{{ route('roles.destroy', $role) }}" onsubmit="return confirm(@js(__('roles.confirm_delete')))">
+                                                        <form method="POST" action="{{ route('roles.destroy', $role) }}" data-confirm="{{ __('roles.confirm_delete') }}">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>

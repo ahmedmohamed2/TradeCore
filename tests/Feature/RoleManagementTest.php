@@ -136,6 +136,13 @@ test('an unused role can be deleted', function () {
     ]);
 
     $this->actingAs($actor)
+        ->get(route('roles.index'))
+        ->assertOk()
+        ->assertSee('data-confirm="'.e(__('roles.confirm_delete')).'"', false)
+        ->assertSee('id="confirm-dialog"', false)
+        ->assertDontSee('return confirm(', false);
+
+    $this->actingAs($actor)
         ->delete(route('roles.destroy', $role))
         ->assertRedirect(route('roles.index'))
         ->assertSessionHas('status');

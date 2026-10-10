@@ -469,7 +469,11 @@ test('a main treasury with sub-treasuries cannot be deleted', function () {
         ->get(route('treasuries.index'))
         ->assertOk()
         ->assertSeeText(__('treasuries.delete_blocked'))
-        ->assertSee(route('treasuries.destroy', $subTreasury), false);
+        ->assertSee(route('treasuries.destroy', $subTreasury), false)
+        ->assertSee('data-confirm="'.e(__('treasuries.confirm_delete')).'"', false)
+        ->assertSee('id="confirm-dialog"', false)
+        ->assertSeeText(__('general.confirm_irreversible'))
+        ->assertDontSee('return confirm(', false);
 });
 
 test('users who can only view treasuries do not see the add sub-treasury action', function () {

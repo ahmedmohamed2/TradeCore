@@ -67,6 +67,8 @@
     </div>
     <!--end::App Wrapper-->
 
+    @include('layouts.partials.confirm-dialog')
+
     <!-- Start Scripts -->
     @include('layouts.footer-scripts')
     @stack('modals')

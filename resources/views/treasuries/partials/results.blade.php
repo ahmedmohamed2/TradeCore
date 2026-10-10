@@ -34,7 +34,7 @@
                             @if ($treasury->children->isNotEmpty())
                                 <span class="treasury-delete-note">{{ __('treasuries.delete_blocked') }}</span>
                             @else
-                                <form method="POST" action="{{ route('treasuries.destroy', $treasury) }}" onsubmit="return confirm(@js(__('treasuries.confirm_delete')))">
+                                <form method="POST" action="{{ route('treasuries.destroy', $treasury) }}" data-confirm="{{ __('treasuries.confirm_delete') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>
@@ -124,7 +124,7 @@
                                         @endcan
 
                                         @can(\App\Enums\Permission::DeleteTreasuries->value)
-                                            <form method="POST" action="{{ route('treasuries.destroy', $subTreasury) }}" onsubmit="return confirm(@js(__('treasuries.confirm_delete')))">
+                                            <form method="POST" action="{{ route('treasuries.destroy', $subTreasury) }}" data-confirm="{{ __('treasuries.confirm_delete') }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>

@@ -7,6 +7,7 @@ return [
     'edit' => 'Edit',
     'create' => 'Create',
     'delete' => 'Delete',
+    'confirm_irreversible' => 'This action cannot be undone.',
     'search' => 'Search',
     'searching' => 'Searching…',
     'actions' => 'Actions',

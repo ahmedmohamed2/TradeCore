@@ -51,7 +51,7 @@
 
                                 @can(\App\Enums\Permission::DeleteUsers->value)
                                     @if (! auth()->user()->is($account) && (! $account->hasRole(\App\Support\RoleName::SuperAdmin) || ($superAdminCount > 1 && auth()->user()->hasRole(\App\Support\RoleName::SuperAdmin))))
-                                        <form method="POST" action="{{ route('users.destroy', $account) }}" onsubmit="return confirm(@js(__('users.confirm_delete')))">
+                                        <form method="POST" action="{{ route('users.destroy', $account) }}" data-confirm="{{ __('users.confirm_delete') }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('general.delete') }}</button>

@@ -228,6 +228,13 @@ test('users with permission can delete another user', function () {
     $subject = User::factory()->create();
 
     $this->actingAs($actor)
+        ->get(route('users.index'))
+        ->assertOk()
+        ->assertSee('data-confirm="'.e(__('users.confirm_delete')).'"', false)
+        ->assertSee('id="confirm-dialog"', false)
+        ->assertDontSee('return confirm(', false);
+
+    $this->actingAs($actor)
         ->delete(route('users.destroy', $subject))
         ->assertRedirect(route('users.index'))
         ->assertSessionHas('status');
