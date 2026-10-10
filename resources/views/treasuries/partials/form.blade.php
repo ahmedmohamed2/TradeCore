@@ -181,7 +181,7 @@
                 </div>
                 <div class="col-sm-6">
                     <span class="settings-kicker">{{ __('treasuries.created_at') }}</span>
-                    <p class="settings-value ltr-nums" dir="ltr">{{ $treasury->created_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</p>
+                    <p class="settings-value"><x-timestamp :at="$treasury->created_at" /></p>
                 </div>
                 <div class="col-sm-6">
                     <span class="settings-kicker">{{ __('treasuries.updated_by') }}</span>
@@ -189,7 +189,7 @@
                 </div>
                 <div class="col-sm-6">
                     <span class="settings-kicker">{{ __('treasuries.updated_at') }}</span>
-                    <p class="settings-value ltr-nums mb-0" dir="ltr">{{ $treasury->updated_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</p>
+                    <p class="settings-value mb-0"><x-timestamp :at="$treasury->updated_at" /></p>
                 </div>
             </div>
         </section>

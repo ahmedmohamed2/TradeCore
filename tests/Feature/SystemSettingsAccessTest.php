@@ -38,6 +38,8 @@ test('users with permission can view the active system settings', function () {
         ->assertSeeText(__('general.edit'))
         ->assertSeeText(__('system-settings.section_contact'))
         ->assertSeeText(__('system-settings.section_notice'))
+        ->assertSee(timestampMarkup($setting->created_at), false)
+        ->assertSee(timestampMarkup($setting->updated_at), false)
         ->assertSee(route('system-settings.edit', $setting), false);
 });
 

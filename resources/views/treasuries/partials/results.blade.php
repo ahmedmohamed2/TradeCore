@@ -141,12 +141,12 @@
                     <span>
                         {{ __('treasuries.created_by') }}
                         <strong>{{ $treasury->createdBy?->name ?? '—' }}</strong>
-                        <time class="ltr-nums" dir="ltr" datetime="{{ $treasury->created_at?->toIso8601String() }}">{{ $treasury->created_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</time>
+                        <x-timestamp :at="$treasury->created_at" />
                     </span>
                     <span>
                         {{ __('treasuries.updated_by') }}
                         <strong>{{ $treasury->updatedBy?->name ?? '—' }}</strong>
-                        <time class="ltr-nums" dir="ltr" datetime="{{ $treasury->updated_at?->toIso8601String() }}">{{ $treasury->updated_at?->translatedFormat('d M Y, h:i A') ?? '—' }}</time>
+                        <x-timestamp :at="$treasury->updated_at" />
                     </span>
                 </p>
             </article>

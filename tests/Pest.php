@@ -3,6 +3,7 @@
 use App\Enums\Permission;
 use App\Models\User;
 use App\Support\PermissionCatalog;
+use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -49,6 +50,15 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+function timestampMarkup(CarbonInterface $moment): string
+{
+    return '<bdi dir="ltr">'.$moment->translatedFormat('d').'</bdi> <bdi>'
+        .$moment->translatedFormat('M').'</bdi> <bdi dir="ltr">'
+        .$moment->translatedFormat('Y').'</bdi>, <bdi dir="ltr">'
+        .$moment->translatedFormat('h:i').'</bdi> <bdi>'
+        .$moment->translatedFormat('A').'</bdi>';
+}
 
 function userWithPermissions(Permission ...$permissions): User
 {

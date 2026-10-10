@@ -124,8 +124,8 @@
                     </div>
                     <div class="col-sm-6">
                         <span class="settings-kicker">{{ __('system-settings.created_at') }}</span>
-                        <p class="settings-value ltr-nums" title="{{ $systemSettings->created_at }}">
-                            {{ $systemSettings->created_at?->translatedFormat('d M Y, h:i A') ?? '—' }}
+                        <p class="settings-value" title="{{ $systemSettings->created_at }}">
+                            <x-timestamp :at="$systemSettings->created_at" />
                         </p>
                     </div>
                     <div class="col-sm-6">
@@ -134,8 +134,8 @@
                     </div>
                     <div class="col-sm-6">
                         <span class="settings-kicker">{{ __('system-settings.updated_at') }}</span>
-                        <p class="settings-value ltr-nums" title="{{ $systemSettings->updated_at }}">
-                            {{ $systemSettings->updated_at?->translatedFormat('d M Y, h:i A') ?? '—' }}
+                        <p class="settings-value" title="{{ $systemSettings->updated_at }}">
+                            <x-timestamp :at="$systemSettings->updated_at" />
                         </p>
                     </div>
                 </div>

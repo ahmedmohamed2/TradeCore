@@ -71,6 +71,8 @@ test('the treasury list shows notes, counters, and who changed the record', func
         ->assertSeeText('Omar Auditor')
         ->assertSeeText($treasury->created_at->translatedFormat('d M Y, h:i A'))
         ->assertSeeText($treasury->updated_at->translatedFormat('d M Y, h:i A'))
+        ->assertSee(timestampMarkup($treasury->created_at), false)
+        ->assertSee(timestampMarkup($treasury->updated_at), false)
         ->assertDontSeeText('master_marker');
 });
 
@@ -104,7 +106,9 @@ test('the edit form shows who created and updated the treasury', function () {
         ->assertSeeText('Lina Cashier')
         ->assertSeeText('Omar Auditor')
         ->assertSeeText($treasury->created_at->translatedFormat('d M Y, h:i A'))
-        ->assertSeeText($treasury->updated_at->translatedFormat('d M Y, h:i A'));
+        ->assertSeeText($treasury->updated_at->translatedFormat('d M Y, h:i A'))
+        ->assertSee(timestampMarkup($treasury->created_at), false)
+        ->assertSee(timestampMarkup($treasury->updated_at), false);
 });
 
 test('a percent sign in search does not match every treasury', function () {
