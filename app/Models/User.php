@@ -123,4 +123,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(SystemSetting::class, 'updated_by');
     }
+
+    /**
+     * @return HasMany<Treasury, $this>
+     */
+    public function createdTreasuries(): HasMany
+    {
+        return $this->hasMany(Treasury::class, 'created_by');
+    }
+
+    /**
+     * @return HasMany<Treasury, $this>
+     */
+    public function updatedTreasuries(): HasMany
+    {
+        return $this->hasMany(Treasury::class, 'updated_by');
+    }
 }

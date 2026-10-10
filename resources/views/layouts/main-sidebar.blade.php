@@ -55,6 +55,17 @@
               </li>
             @endcanany
           @endcanany
+
+          @canany(\App\Enums\Permission::treasuryPermissions())
+            <li class="nav-header">{{ __('menu.accounting') }}</li>
+
+            <li class="nav-item">
+              <a href="{{ route('treasuries.index') }}" class="nav-link {{ request()->routeIs('treasuries.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-safe"></i>
+                <p>{{ __('menu.treasuries') }}</p>
+              </a>
+            </li>
+          @endcanany
         </ul>
         <!--end::Sidebar Menu-->
       </nav>

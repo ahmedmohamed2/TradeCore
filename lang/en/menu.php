@@ -11,4 +11,5 @@ return [
     'purchases' => 'Purchases',
     'inventory' => 'Inventory',
     'accounting' => 'Accounting',
+    'treasuries' => 'Treasuries',
 ];

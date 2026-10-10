@@ -5,6 +5,7 @@ return [
         'system-settings' => 'إعدادات النظام',
         'users' => 'المستخدمون',
         'roles' => 'الأدوار',
+        'treasuries' => 'الخزائن',
     ],
     'names' => [
         'system-settings' => [
@@ -22,6 +23,12 @@ return [
             'create' => 'إنشاء الأدوار',
             'update' => 'تعديل الأدوار',
             'delete' => 'حذف الأدوار',
+        ],
+        'treasuries' => [
+            'view' => 'عرض الخزائن',
+            'create' => 'إنشاء الخزائن',
+            'update' => 'تعديل الخزائن',
+            'delete' => 'حذف الخزائن',
         ],
     ],
 ];

@@ -14,6 +14,10 @@ enum Permission: string
     case CreateRoles = 'roles.create';
     case UpdateRoles = 'roles.update';
     case DeleteRoles = 'roles.delete';
+    case ViewTreasuries = 'treasuries.view';
+    case CreateTreasuries = 'treasuries.create';
+    case UpdateTreasuries = 'treasuries.update';
+    case DeleteTreasuries = 'treasuries.delete';
 
     public function group(): string
     {
@@ -51,6 +55,19 @@ enum Permission: string
             self::CreateRoles->value,
             self::UpdateRoles->value,
             self::DeleteRoles->value,
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function treasuryPermissions(): array
+    {
+        return [
+            self::ViewTreasuries->value,
+            self::CreateTreasuries->value,
+            self::UpdateTreasuries->value,
+            self::DeleteTreasuries->value,
         ];
     }
 }

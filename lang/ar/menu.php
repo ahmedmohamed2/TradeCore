@@ -11,4 +11,5 @@ return [
     'purchases' => 'المشتريات',
     'inventory' => 'المخزون',
     'accounting' => 'المحاسبة',
+    'treasuries' => 'الخزائن',
 ];
