@@ -6,8 +6,10 @@ use App\Enums\Permission;
 use App\Http\Requests\StoreTreasuryRequest;
 use App\Http\Requests\UpdateTreasuryRequest;
 use App\Models\Treasury;
+use App\Support\RealtimeSearch;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\View;
@@ -30,18 +32,16 @@ class TreasuryController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|Response
     {
         $search = mb_substr($request->string('search')->trim()->toString(), 0, 100);
 
-        $treasuries = Treasury::query()
-            ->search($search)
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
-
-        return view('treasuries.index', [
-            'treasuries' => $treasuries,
+        return RealtimeSearch::view($request, 'treasuries.index', [
+            'treasuries' => Treasury::query()
+                ->search($search)
+                ->latest()
+                ->paginate(15)
+                ->withQueryString(),
             'search' => $search,
         ]);
     }

@@ -26,6 +26,10 @@
         max-width: 22rem;
     }
 
+    .realtime-search-results[aria-busy='true'] {
+        opacity: 0.55;
+    }
+
     .settings-shell .form-select {
         min-height: 2.85rem;
         border-radius: 0.7rem;

@@ -7,10 +7,12 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\RealtimeSearch;
 use App\Support\RoleName;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -36,19 +38,17 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|Response
     {
         $search = mb_substr($request->string('search')->trim()->toString(), 0, 100);
 
-        $users = User::query()
-            ->with('roles')
-            ->search($search)
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
-
-        return view('users.index', [
-            'users' => $users,
+        return RealtimeSearch::view($request, 'users.index', [
+            'users' => User::query()
+                ->with('roles')
+                ->search($search)
+                ->latest()
+                ->paginate(15)
+                ->withQueryString(),
             'search' => $search,
             'superAdminCount' => User::role(RoleName::SuperAdmin)->count(),
         ]);

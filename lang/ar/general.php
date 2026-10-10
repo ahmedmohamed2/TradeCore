@@ -8,6 +8,7 @@ return [
     'create' => 'إنشاء',
     'delete' => 'حذف',
     'search' => 'بحث',
+    'searching' => 'جارٍ البحث…',
     'actions' => 'إجراءات',
     'required' => 'مطلوب',
     'active' => 'نشط',

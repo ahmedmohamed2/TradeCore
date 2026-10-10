@@ -37,3 +37,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 @yield('scripts')
+@stack('scripts')
