@@ -42,7 +42,7 @@
 
 ## 🛠️ Tech Stack
 
-* **Primary Backend:** PHP 8.x, Laravel 11.x
+* **Primary Backend:** PHP 8.x, Laravel 13.x
 
 * **Database:**  MySQL
 
